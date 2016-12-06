@@ -1,0 +1,20 @@
+sudo: required
+dist: trusty
+language: generic
+
+services:
+  - docker
+
+env:
+  - QT_VERSION=qt:5.7.0
+
+addons:
+  apt:
+    packages:
+      - xvfb
+
+script:
+  - export PATH=$PWD/scripts:$PATH
+  - docker_exec.sh qmake . && make && sudo make install
+  - xvfb-run -a -s "-screen 0 800x600x24" make check
+  - git clean -xfd
