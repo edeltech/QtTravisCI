@@ -2,19 +2,14 @@ sudo: required
 dist: trusty
 language: generic
 
-services:
-  - docker
-
-env:
-  - QT_VERSION=qt:5.7.0
-
-addons:
-  apt:
-    packages:
-      - xvfb
+install:
+  - sudo add-apt-repository ppa:beineri/opt-qt57-trusty
+  - sudo apt-get update
+  - sudo apt-get -y install qt57declarative qt57quickcontrols qt57quickcontrols2 qt57graphicaleffects qt57tools qt57svg
+  - sudo apt-get -y install xvfb
 
 script:
-  - export PATH=$PWD/scripts:$PATH
-  - docker_exec.sh qmake . && make && sudo make install
+  - source /opt/qt57/bin/qt57-env.sh
+  - qmake . && make && sudo make install
   - xvfb-run -a -s "-screen 0 800x600x24" make check
   - git clean -xfd
